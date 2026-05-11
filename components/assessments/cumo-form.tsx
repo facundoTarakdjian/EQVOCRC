@@ -82,7 +82,13 @@ const DIM_COLORS: Record<Dim, string> = {
   D: "#ec4899",
 }
 
-const RATING_LABELS = ["Nada", "Poco", "Algo", "Bastante", "Totalmente"]
+const RATING_LABELS = [
+  "Nada importante",
+  "Muy poca importancia",
+  "Lo considero, pero no mucho",
+  "Bastante importante",
+  "Totalmente importante",
+]
 const ITEMS_PER_PAGE = 5
 const TOTAL_CONTENT_PAGES = Math.ceil(ITEMS.length / ITEMS_PER_PAGE) // 9
 const RESULTS_PAGE = TOTAL_CONTENT_PAGES
@@ -183,16 +189,17 @@ export function CUMOForm() {
             <h2 className="text-2xl font-bold">Cuestionario de Motivaciones (CUMO)</h2>
             <p className="mt-1 text-sm text-muted-foreground">45 frases · 5 dimensiones motivacionales</p>
           </div>
-          <div className="rounded-lg border bg-muted/50 p-4">
+          <div className="rounded-lg border bg-muted/50 p-4 space-y-3">
             <p className="text-sm font-medium">Consigna:</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Indicá la importancia que tiene para vos cada frase usando la escala:
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Marcá un valor del <strong>0</strong> al <strong>4</strong> en cada frase, según el grado de importancia que le das a cada motivo a la hora de elegir tu carrera o profesión.
             </p>
-            <div className="mt-2 flex flex-wrap gap-1.5">
+            <div className="grid grid-cols-1 gap-1 sm:grid-cols-5">
               {RATING_LABELS.map((label, i) => (
-                <span key={i} className="rounded-full border bg-muted px-2.5 py-0.5 text-xs font-medium">
-                  {i} – {label}
-                </span>
+                <div key={i} className="flex items-center gap-2 sm:flex-col sm:items-center sm:gap-1 sm:text-center">
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{i}</span>
+                  <span className="text-xs text-muted-foreground leading-tight">{label}</span>
+                </div>
               ))}
             </div>
           </div>
@@ -210,58 +217,62 @@ export function CUMOForm() {
         {/* Questions */}
         {!isResults && (
           <Card className="p-6 space-y-5">
-            {/* Block headers */}
-            {page === 0 && (
-              <p className="rounded-lg bg-primary/8 px-4 py-2 text-sm font-semibold text-primary">
-                Quisiera que mi carrera me permita…
-              </p>
-            )}
-            {page === Math.floor(BLOCK_2_START / ITEMS_PER_PAGE) && pageStart === BLOCK_2_START && (
-              <p className="rounded-lg bg-accent/10 px-4 py-2 text-sm font-semibold text-accent-foreground">
-                Voy a elegir una carrera para…
-              </p>
-            )}
+            {/* Block header — visible en cada página */}
+            <div className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${
+              pageStart < BLOCK_2_START
+                ? "bg-primary/8 text-primary border border-primary/20"
+                : "bg-accent/10 text-accent-foreground border border-accent/20"
+            }`}>
+              {pageStart < BLOCK_2_START
+                ? "Quisiera que mi carrera / ocupación / profesión me permita:"
+                : "Voy a elegir una carrera u ocupación para:"}
+            </div>
 
             {pageItems.map((item, i) => {
               const absIdx = pageStart + i
-              const isBlock2 = absIdx >= BLOCK_2_START
-              // show block 2 header when we cross the boundary mid-page
-              const crossesBoundary = absIdx === BLOCK_2_START && pageStart < BLOCK_2_START
+              const selectedVal = responses[absIdx]
+              const answered = selectedVal !== undefined
 
               return (
-                <div key={absIdx}>
-                  {crossesBoundary && (
-                    <p className="mb-4 rounded-lg bg-accent/10 px-4 py-2 text-sm font-semibold text-accent-foreground">
-                      Voy a elegir una carrera para…
+                <div
+                  key={absIdx}
+                  className={`rounded-xl border p-4 transition-all ${
+                    answered ? "border-primary/30 bg-primary/5" : "border-border"
+                  }`}
+                >
+                  <p className="mb-3 text-sm font-medium leading-relaxed">
+                    <span className="mr-2 text-xs font-bold text-muted-foreground">{absIdx + 1}.</span>
+                    {item.text}
+                  </p>
+
+                  {/* Botones — desktop: número + label · mobile: solo número */}
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {RATING_LABELS.map((label, val) => {
+                      const selected = selectedVal === val
+                      return (
+                        <button
+                          key={val}
+                          onClick={() => handleRate(absIdx, val)}
+                          className={`flex flex-col items-center gap-0.5 rounded-lg border-2 px-1 py-2 text-center transition-all hover:scale-105 active:scale-95 ${
+                            selected
+                              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                              : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-sm font-bold leading-none">{val}</span>
+                          {/* Label visible solo en desktop */}
+                          <span className="hidden sm:block text-[9px] leading-tight text-center">{label}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Mobile: label del valor seleccionado debajo */}
+                  {answered && (
+                    <p className="sm:hidden mt-2 text-center text-xs font-medium text-primary">
+                      {selectedVal} — {RATING_LABELS[selectedVal]}
                     </p>
                   )}
-                  <div className={`rounded-xl border p-4 transition-all ${
-                    responses[absIdx] !== undefined ? "border-primary/30 bg-primary/5" : "border-border"
-                  }`}>
-                    <p className="mb-3 text-sm font-medium leading-relaxed">
-                      <span className="mr-2 text-xs font-bold text-muted-foreground">{absIdx + 1}.</span>
-                      {item.text}
-                    </p>
-                    <div className="grid grid-cols-5 gap-1.5">
-                      {RATING_LABELS.map((label, val) => {
-                        const selected = responses[absIdx] === val
-                        return (
-                          <button
-                            key={val}
-                            onClick={() => handleRate(absIdx, val)}
-                            className={`flex flex-col items-center gap-0.5 rounded-lg border-2 px-1 py-2 text-center transition-all hover:scale-105 active:scale-95 ${
-                              selected
-                                ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                                : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                            }`}
-                          >
-                            <span className="text-sm font-bold leading-none">{val}</span>
-                            <span className="text-[10px] leading-tight">{label}</span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
                 </div>
               )
             })}
