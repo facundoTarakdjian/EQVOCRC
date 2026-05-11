@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:\\\\Users\\\\facut\\\\OneDrive\\\\Bravo Bravito\\\\Plataforma-EQVOCRC:*)",
+      "Bash(npx tsc:*)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(node_modules/.bin/tsc.cmd --noEmit)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(cmd.exe /c \"taskkill /F /IM node.exe\")",
+      "Bash(cmd.exe:*)",
+      "Bash(gh auth:*)",
+      "Bash(where.exe gh:*)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/facut/AppData/Local/Programs/**)",
+      "Read(//c/Users/facut/**)"
+    ]
+  }
+}
