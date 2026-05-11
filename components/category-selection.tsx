@@ -242,10 +242,13 @@ export function CategorySelection({ userName = "" }: CategorySelectionProps) {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-12 text-center">
+        <div className="mt-12 flex flex-col items-center gap-3">
           <p className="text-sm text-muted-foreground">
             Puedes completar las secciones en el orden que prefieras. Tu progreso se guarda automáticamente.
           </p>
+          <Link href="/orientador" className="text-xs text-muted-foreground/60 hover:text-primary transition-colors underline underline-offset-4">
+            Vista orientador →
+          </Link>
         </div>
       </div>
     </div>
