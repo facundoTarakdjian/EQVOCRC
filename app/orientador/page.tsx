@@ -348,7 +348,7 @@ export default function OrientadorPage() {
                     <p className="text-sm text-muted-foreground mt-1">Social — Investigador — Artístico</p>
                   </div>
                   <div className="space-y-2">
-                    {RIASEC_DATA.sort((a, b) => b.value - a.value).map((d) => (
+                    {[...RIASEC_DATA].sort((a, b) => b.value - a.value).map((d) => (
                       <div key={d.subject} className="flex items-center gap-2 text-sm">
                         <span className="w-24 text-muted-foreground">{d.subject}</span>
                         <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">

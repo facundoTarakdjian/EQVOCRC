@@ -12,6 +12,7 @@ import { SECTION_IDS } from "@/lib/questionnaire-calculator"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from "recharts"
+import { ChartErrorBoundary } from "@/components/assessments/chart-error-boundary"
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 type Area = "O" | "M" | "C" | "Ci" | "P" | "A" | "L" | "Mu" | "S" | "Of"
@@ -72,7 +73,7 @@ function calculateScores(responses: KuderResponses) {
 }
 
 function CustomTooltip({ active, payload }: any) {
-  if (active && payload?.length) {
+  if (active && payload?.length && payload[0]?.payload) {
     const d = payload[0].payload
     return (
       <div className="rounded-lg border bg-card px-3 py-2 shadow-lg text-sm">
@@ -235,17 +236,19 @@ export function KuderForm() {
             </div>
 
             <div className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 32, left: 80, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" domain={[0, 8]} tickCount={5} tick={{ fontSize: 11 }} />
-                  <YAxis type="category" dataKey="label" tick={{ fontSize: 11 }} width={80} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={22}>
-                    {chartData.map((d, i) => <Cell key={i} fill={d.fill} />)}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <ChartErrorBoundary>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 32, left: 80, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                    <XAxis type="number" domain={[0, 8]} tickCount={5} tick={{ fontSize: 11 }} />
+                    <YAxis type="category" dataKey="label" tick={{ fontSize: 11 }} width={80} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={22}>
+                      {chartData.map((d, i) => <Cell key={i} fill={d.fill} />)}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartErrorBoundary>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2">

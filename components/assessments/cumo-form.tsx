@@ -12,6 +12,7 @@ import { SECTION_IDS } from "@/lib/questionnaire-calculator"
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from "recharts"
+import { ChartErrorBoundary } from "@/components/assessments/chart-error-boundary"
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 type Dim = "S" | "F" | "A" | "E" | "D"
@@ -108,7 +109,7 @@ function calculateScores(responses: Record<number, number>) {
 }
 
 function CustomTooltip({ active, payload }: any) {
-  if (active && payload?.length) {
+  if (active && payload?.length && payload[0]?.payload) {
     const d = payload[0].payload
     return (
       <div className="rounded-lg border bg-card px-3 py-2 shadow-lg text-sm">
@@ -288,17 +289,19 @@ export function CUMOForm() {
             </div>
 
             <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 4, right: 24, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="dim" tick={{ fontSize: 13, fontWeight: 600 }} />
-                  <YAxis domain={[0, counts.S * 4]} tick={{ fontSize: 11 }} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="score" radius={[6, 6, 0, 0]} maxBarSize={56}>
-                    {chartData.map((d, i) => <Cell key={i} fill={d.fill} />)}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <ChartErrorBoundary>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} margin={{ top: 4, right: 24, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="dim" tick={{ fontSize: 13, fontWeight: 600 }} />
+                    <YAxis domain={[0, counts.S * 4]} tick={{ fontSize: 11 }} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="score" radius={[6, 6, 0, 0]} maxBarSize={56}>
+                      {chartData.map((d, i) => <Cell key={i} fill={d.fill} />)}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartErrorBoundary>
             </div>
 
             <div className="space-y-2">

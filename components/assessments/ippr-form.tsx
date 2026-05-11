@@ -27,6 +27,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts"
+import { ChartErrorBoundary } from "@/components/assessments/chart-error-boundary"
 
 // Scale: 0 = No conozco, 1 = Desagrado, 2 = Indiferencia, 3 = Agrado
 const scaleOptions = [
@@ -60,7 +61,7 @@ function buildChartData(responses: IPPRResponse) {
 
 // Custom tooltip for the bar chart
 function CustomTooltip({ active, payload }: any) {
-  if (active && payload && payload.length) {
+  if (active && payload && payload.length && payload[0]?.payload) {
     const d = payload[0].payload
     return (
       <div className="rounded-lg border bg-card px-3 py-2 shadow-lg text-sm">
@@ -268,33 +269,35 @@ export function IPPRForm() {
 
             {/* Bar Chart */}
             <div className="mb-8 h-[420px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={buildChartData(responses)}
-                  layout="vertical"
-                  margin={{ top: 0, right: 40, left: 8, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    domain={[0, 36]}
-                    tickCount={7}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="emoji"
-                    width={32}
-                    tick={{ fontSize: 18 }}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={28}>
-                    {buildChartData(responses).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <ChartErrorBoundary>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={buildChartData(responses)}
+                    layout="vertical"
+                    margin={{ top: 0, right: 40, left: 8, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                    <XAxis
+                      type="number"
+                      domain={[0, 36]}
+                      tickCount={7}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="emoji"
+                      width={32}
+                      tick={{ fontSize: 18 }}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={28}>
+                      {buildChartData(responses).map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartErrorBoundary>
             </div>
 
             {/* Score list */}

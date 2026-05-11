@@ -20,6 +20,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from "recharts"
+import { ChartErrorBoundary } from "@/components/assessments/chart-error-boundary"
 
 // Scale: 0–10
 const SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -37,7 +38,7 @@ function totalFor(responses: GardnerResponses, key: GardnerKey): number {
 }
 
 function ChartTooltip({ active, payload }: any) {
-  if (active && payload?.length) {
+  if (active && payload?.length && payload[0]?.payload) {
     const d = payload[0].payload
     return (
       <div className="rounded-lg border bg-card px-3 py-2 shadow-lg text-sm">
@@ -221,23 +222,25 @@ export function GardnerForm() {
             </div>
 
             <div className="h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  layout="vertical"
-                  data={chartData}
-                  margin={{ top: 0, right: 40, left: 8, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" domain={[0, 100]} tickCount={6} tick={{ fontSize: 11 }} />
-                  <YAxis type="category" dataKey="short" width={80} tick={{ fontSize: 11 }} />
-                  <Tooltip content={<ChartTooltip />} />
-                  <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={24}>
-                    {chartData.map((d, i) => (
-                      <Cell key={i} fill={d.score >= THRESHOLD ? "#6366f1" : "#cbd5e1"} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <ChartErrorBoundary>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    layout="vertical"
+                    data={chartData}
+                    margin={{ top: 0, right: 40, left: 8, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                    <XAxis type="number" domain={[0, 100]} tickCount={6} tick={{ fontSize: 11 }} />
+                    <YAxis type="category" dataKey="short" width={80} tick={{ fontSize: 11 }} />
+                    <Tooltip content={<ChartTooltip />} />
+                    <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={24}>
+                      {chartData.map((d, i) => (
+                        <Cell key={i} fill={d.score >= THRESHOLD ? "#6366f1" : "#cbd5e1"} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartErrorBoundary>
             </div>
 
             {highlighted.length > 0 ? (

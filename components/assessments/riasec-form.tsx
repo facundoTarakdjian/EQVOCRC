@@ -13,6 +13,7 @@ import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   Radar, Tooltip, ResponsiveContainer,
 } from "recharts"
+import { ChartErrorBoundary } from "@/components/assessments/chart-error-boundary"
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -303,22 +304,24 @@ export function RIASECForm() {
               </div>
 
               <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
-                    <PolarGrid stroke="#e2e8f0" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: "#64748b" }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 15]} tick={{ fontSize: 9 }} tickCount={4} />
-                    <Radar
-                      name="RIASEC"
-                      dataKey="value"
-                      stroke="#6366f1"
-                      fill="#6366f1"
-                      fillOpacity={0.2}
-                      strokeWidth={2}
-                    />
-                    <Tooltip formatter={(v) => [`${v} / 15`, "Puntaje"]} />
-                  </RadarChart>
-                </ResponsiveContainer>
+                <ChartErrorBoundary>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
+                      <PolarGrid stroke="#e2e8f0" />
+                      <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: "#64748b" }} />
+                      <PolarRadiusAxis angle={90} domain={[0, 15]} tick={{ fontSize: 9 }} tickCount={4} />
+                      <Radar
+                        name="RIASEC"
+                        dataKey="value"
+                        stroke="#6366f1"
+                        fill="#6366f1"
+                        fillOpacity={0.2}
+                        strokeWidth={2}
+                      />
+                      <Tooltip formatter={(v) => [`${v} / 15`, "Puntaje"]} />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </ChartErrorBoundary>
               </div>
 
               {/* Profile code */}
