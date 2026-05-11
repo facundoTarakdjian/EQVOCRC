@@ -61,14 +61,14 @@ const RIASEC_DATA = [
 ]
 
 const GARDNER_DATA = [
-  { name: "Lógico-Matemática", short: "Lóg-Mat", score: 42 },
-  { name: "Lingüística", short: "Lingüíst.", score: 78 },
-  { name: "Espacial", short: "Espacial", score: 65 },
-  { name: "Corporal-Kinestésica", short: "Corporal", score: 58 },
-  { name: "Musical", short: "Musical", score: 70 },
-  { name: "Naturalista", short: "Naturalista", score: 55 },
-  { name: "Intrapersonal", short: "Intrap.", score: 82 },
-  { name: "Interpersonal", short: "Interp.", score: 88 },
+  { name: "Lógico-Matemática",   short: "Lóg-Mat",    score: 42 },
+  { name: "Verbal-Lingüística",  short: "Verb-Ling",   score: 78 },
+  { name: "Espacial",            short: "Espacial",    score: 65 },
+  { name: "Musical",             short: "Musical",     score: 70 },
+  { name: "Cinestésica-Corporal",short: "Cinestésica", score: 58 },
+  { name: "Intrapersonal",       short: "Intrap.",     score: 82 },
+  { name: "Interpersonal",       short: "Interp.",     score: 88 },
+  { name: "Naturalista",         short: "Naturalista", score: 55 },
 ]
 
 const CUMO_DATA = [
@@ -381,7 +381,7 @@ export default function OrientadorPage() {
               </div>
               <div className="rounded-lg border bg-violet-50 border-violet-100 p-3">
                 <p className="text-sm font-semibold text-violet-700">
-                  Inteligencias destacadas: Interpersonal (88) · Intrapersonal (82) · Lingüística (78) · Musical (70)
+                  Inteligencias destacadas: Interpersonal (88) · Intrapersonal (82) · Verbal-Lingüística (78) · Musical (70)
                 </p>
               </div>
             </SectionCard>

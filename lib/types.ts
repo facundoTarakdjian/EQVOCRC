@@ -55,14 +55,14 @@ export type HerrmannResponse = {
 }
 
 export type GardnerResponse = {
-  logicoMatematica: { [key: string]: number } // 1-5 scale
-  linguistica: { [key: string]: number }
+  logicoMatematica: { [key: string]: number } // 0-10 scale, total 0-100
+  verbalLinguistica: { [key: string]: number }
   espacial: { [key: string]: number }
-  corporalCinetica: { [key: string]: number }
   musical: { [key: string]: number }
-  naturalista: { [key: string]: number }
+  cinestesicaCorporal: { [key: string]: number }
   intrapersonal: { [key: string]: number }
   interpersonal: { [key: string]: number }
+  naturalista: { [key: string]: number }
 }
 
 export type ProyectivasResponse = {
